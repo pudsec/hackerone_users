@@ -1,0 +1,25 @@
+name: hackerone_users
+on:
+  schedule:
+    - cron: '15 15 * * *'
+jobs:
+  resfresh-list:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run
+        run: |
+          python3 run.py
+      - name: Commit
+        run: |
+          git config --local user.email shaun@pudsec.com
+          git config --local user.name pudsec
+          git add users.csv
+          git commit -m "update"
+      - name: Push
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
